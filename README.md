@@ -40,4 +40,4 @@ On a local Apple Silicon Mac, checking 40,000 CSV rows with 100 distinct destina
 
 ## Maintainer
 
-Built by Tone Stories, a marketplace connecting advertisers with creators for Telegram Stories campaigns. [Tone Stories](https://tonstories.com/?utm_source=github&utm_medium=referral&utm_campaign=open_source&utm_content=campaign-link-audit) · [Telegram](https://t.me/TON_Storiesbot?start=gh_campaign_link_audit)
+Built by TON Stories, a marketplace connecting advertisers with creators for Telegram Stories campaigns. [TON Stories](https://tonstories.com/?utm_source=github&utm_medium=referral&utm_campaign=open_source&utm_content=campaign-link-audit) · [Telegram](https://t.me/TON_Storiesbot?start=gh_campaign_link_audit)
