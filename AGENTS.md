@@ -1,0 +1,1 @@
+Use Python 3.9+ from the repository root. Run `python3 test_example.py` before submitting changes. Machine-readable example: `python3 audit.py examples/plan.csv --json` (intentional findings, exit 1). Keep processing offline and examples synthetic.
