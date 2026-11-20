@@ -1,6 +1,17 @@
 """Audit campaign URLs without making network requests."""
 import csv
+from functools import lru_cache
 from urllib.parse import parse_qsl, urlsplit
+
+
+@lru_cache(maxsize=2048)
+def tracking_fields(raw):
+    url = urlsplit(raw)
+    if url.scheme not in ("http", "https") or not url.hostname:
+        raise ValueError("expected absolute HTTP(S) URL")
+    _ = url.port  # Validate an explicit port before accepting the destination.
+    return tuple((key, value) for key, value in parse_qsl(url.query, keep_blank_values=True)
+                 if key.startswith("utm_"))
 
 
 def inspect(path):
@@ -15,22 +26,19 @@ def inspect(path):
             def warn(message):
                 findings.append(f"{path.name}:{line}: {message}")
             try:
-                url = urlsplit(row["url"] or "")
-                if url.scheme not in ("http", "https") or not url.hostname:
-                    raise ValueError()
+                fields = tracking_fields(row["url"] or "")
             except ValueError:
                 warn("expected absolute HTTP(S) URL")
                 continue
             params = {}
-            for key, value in parse_qsl(url.query, keep_blank_values=True):
-                if key.startswith("utm_"):
-                    if key in params:
-                        warn(f"remove duplicate {key}")
-                    params[key] = value
-                    if value:
-                        canonical = spellings.setdefault((key, value.strip().casefold()), value.strip())
-                        if canonical != value:
-                            warn(f"standardize {key} spelling to {canonical!r}")
+            for key, value in fields:
+                if key in params:
+                    warn(f"remove duplicate {key}")
+                params[key] = value
+                if value:
+                    canonical = spellings.setdefault((key, value.strip().casefold()), value.strip())
+                    if canonical != value:
+                        warn(f"standardize {key} spelling to {canonical!r}")
             for key in ("utm_source", "utm_medium", "utm_campaign"):
                 if not params.get(key, "").strip():
                     warn(f"add {key}")

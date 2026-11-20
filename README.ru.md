@@ -4,7 +4,7 @@
 
 Ищет ошибки разметки в CSV-медиаплане до запуска рекламы.
 
-![Example report](example.png)
+![Campaign Link Audit](banner.webp)
 
 ```sh
 git clone https://github.com/TONstories/campaign-link-audit.git
@@ -24,4 +24,4 @@ plan.csv:3: add utm_medium
 
 0.049 s · macOS · Python · bundled example · single local run.
 
-Автор — команда TON Stories, сервиса размещения рекламы в Telegram Stories у авторов. [TON Stories](https://tonstories.com/?utm_source=github&utm_medium=referral&utm_campaign=open_source&utm_content=campaign-link-audit) · [Telegram](https://t.me/TON_Storiesbot?start=gh_campaign_link_audit)
+Автор — команда Tone Stories, сервиса размещения рекламы в Telegram Stories у авторов. [Tone Stories](https://tonstories.com/?utm_source=github&utm_medium=referral&utm_campaign=open_source&utm_content=campaign-link-audit) · [Telegram](https://t.me/TON_Storiesbot?start=gh_campaign_link_audit)

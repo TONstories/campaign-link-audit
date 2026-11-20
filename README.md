@@ -1,10 +1,14 @@
 # Campaign Link Audit
 
-[Русский](README.ru.md)
+![Campaign Link Audit — Catch tracking errors before launch.](banner.webp)
 
-Catch tracking errors across a CSV media plan before the campaign launches.
+[Русский](README.ru.md) · [Release notes](https://github.com/TONstories/campaign-link-audit/releases) · [0BSD license](LICENSE)
 
-![Example report](example.png)
+Catch tracking errors before launch. Export a UTF-8 CSV with one column named url. Keep creator, date and cost columns alongside it if useful; the checker reads the destination column only. Use absolute HTTP or HTTPS links. Quoted cells, percent-encoded parameter values and a UTF-8 byte-order mark are supported. Repeated destinations reuse parsed query fields while spelling comparisons still run for each placement.
+
+## Try the included example
+
+Requires Python 3.9 or later. The example intentionally includes a finding and exits with status 1.
 
 ```sh
 git clone https://github.com/TONstories/campaign-link-audit.git
@@ -18,10 +22,22 @@ plan.csv:3: remove duplicate utm_campaign
 plan.csv:3: add utm_medium
 ```
 
-Supply a UTF-8 CSV with a url header. Scan absolute HTTP(S) links for missing source, medium and campaign fields, duplicate UTM keys and case or space variations. The first spelling is the reference within a file. Values are URL-decoded. Your input is read only.
+## Auditing a placement sheet
 
-Python 3.9+. Add --json for structured results. Exit codes: 0 passes the implemented checks, 1 has findings, 2 indicates an input or invocation error.
+```sh
+python3 audit.py examples/plan.csv --json
+```
 
-0.049 s · macOS · Python · bundled example · single local run.
+Start with missing source, medium or campaign fields, then resolve duplicate keys. When Telegram and telegram both appear in one field, review the first spelling before standardizing the sheet. The chosen spelling is a consistency hint, not a claim about your analytics configuration. The audit runs offline and does not test redirects or confirm receipt of events.
 
-Built by TON Stories, a marketplace connecting advertisers with creators for Telegram Stories campaigns. [TON Stories](https://tonstories.com/?utm_source=github&utm_medium=referral&utm_campaign=open_source&utm_content=campaign-link-audit) · [Telegram](https://t.me/TON_Storiesbot?start=gh_campaign_link_audit)
+## CI and coding agents
+
+Use the JSON report when consuming results programmatically. Its `findings` array contains one diagnostic per detected issue. Exit 0 means the implemented rules passed, exit 1 means review the findings, and exit 2 means the command or input could not be processed. Capture stderr separately for invocation errors. Run `python3 test_example.py` to exercise the bundled fixture and a corrected input. Agent setup is documented in [AGENTS.md](AGENTS.md).
+
+## Performance
+
+On a local Apple Silicon Mac, checking 40,000 CSV rows with 100 distinct destinations took **0.323 s** versus **1.109 s** with v0.1.0. Both numbers are the median of three paired CLI runs with identical local input, including interpreter startup. Timing varies with hardware, storage and input composition.
+
+## Maintainer
+
+Built by Tone Stories, a marketplace connecting advertisers with creators for Telegram Stories campaigns. [Tone Stories](https://tonstories.com/?utm_source=github&utm_medium=referral&utm_campaign=open_source&utm_content=campaign-link-audit) · [Telegram](https://t.me/TON_Storiesbot?start=gh_campaign_link_audit)
